@@ -48,6 +48,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3915E3BA18BC79FE00891744 /* male.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = male.txt; sourceTree = "<group>"; };
+		3915E3BB18BC7A2F00891744 /* gender */ = {isa = PBXFileReference; lastKnownFileType = folder; path = gender; sourceTree = "<group>"; };
 		39F78BB618B9A5CC0066DE93 /* FaceCapture.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FaceCapture.h; sourceTree = "<group>"; };
 		39F78BB718B9A5D60066DE93 /* FaceCapture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FaceCapture.cpp; sourceTree = "<group>"; };
 		39F78BB918B9A5E10066DE93 /* Morph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Morph.cpp; sourceTree = "<group>"; };
@@ -147,6 +149,8 @@
 		5AC8DC101897A65500C31374 /* cvtest */ = {
 			isa = PBXGroup;
 			children = (
+				3915E3BB18BC7A2F00891744 /* gender */,
+				3915E3BA18BC79FE00891744 /* male.txt */,
 				5AC8DC111897A65500C31374 /* main.cpp */,
 				5A4A05B918B05C37004B7D8A /* FaceRecord.cpp */,
 				5A4A05BA18B05C37004B7D8A /* FaceRecord.h */,
