@@ -56,17 +56,70 @@ bool same_face(CvRect* r, CvRect* r_last, IplImage* imgCamera, IplImage* imgCame
 void report_faces(int start, int n, Ptr<FaceRecognizer> model) {
     const char* folder_name ="/Users/xueqianjiang/Desktop/Images";
     std::stringstream filename;
-    int result;
+    int gender;
+    int sizeofeig=3;
+    float eigenface[sizeofeig];
+    float eig[sizeofeig];
     for (int i = start+1; i<=start+n; i++) {
         filename<< folder_name << "/img" << i << ".jpg";
-        result = detect(model, filename.str());
+        //gender = detect(model, filename.str());
+        gender = 0; // replace with above
+        //eigenface = eigenface(filename.str());
+        for (int j=0; j<sizeofeig; j++) {
+            eig[j]=eigenface[j];}
+        send_record(gender,eig, sizeofeig);
     }
     
     // query database on the eigenface of the images
     // save the face visit in the database
 }
 
+void send_record(float gender,float eig[], int sizeofeig) {
+    CURL* curl;
+    CURLcode res;
+    ostringstream postmsg;
+    postmsg <<"gender=" << gender;
+    for (int i=0; i<sizeofeig; i++) {
+        postmsg << "&eig";
+        postmsg << i << "=";
+        postmsg << eig[i];
+    }
+    std::string poststring = postmsg.str();
+    const char* postthis = poststring.c_str();
+    cout << postthis;
+    curl = curl_easy_init();
+    if(curl) {
+        curl_easy_setopt(curl, CURLOPT_URL, "http://www.thebabythinker.com/crm.php");
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, postthis);
+        
+        /* if we don't provide POSTFIELDSIZE, libcurl will strlen() by
+         itself */
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, (long)strlen(postthis));
+        
+        res = curl_easy_perform(curl);
+        cout << "made connection";
+        
+        /* always cleanup */
+        curl_easy_cleanup(curl);
+    }
+}
+
+//void report_faces(int start, int n, Ptr<FaceRecognizer> model) {
+  //  const char* folder_name ="/Users/xueqianjiang/Desktop/Images";
+    //std::stringstream filename;
+    //int result;
+    //for (int i = start+1; i<=start+n; i++) {
+      //  filename<< folder_name << "/img" << i << ".jpg";
+        //result = detect(model, filename.str());
+    //}
+    
+    // query database on the eigenface of the images
+    // save the face visit in the database
+//}
+
 // this will show the image on top of each rectangular face detected and then put into the prediction result
+
+
 void show_message(int predict_result, CvRect* r, IplImage* &imgDrawn)
 {
     //char* actual_text = "Prediction = %d"+predict_result.str();

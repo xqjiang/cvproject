@@ -16,6 +16,7 @@
 #include <Capture.h>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include "curl/curl.h"
 using namespace cv;
 using namespace std;
 
@@ -26,6 +27,8 @@ using namespace std;
 
 
 void find_faces( IplImage* img, CvMemStorage* storage, CvHaarClassifierCascade* cascade, CvSeq* faces, float scale);
+
 void report_faces(int start, int n, Ptr<FaceRecognizer> model);
 bool same_face(CvRect* r, CvRect* r_last, IplImage* imgCamera, IplImage* imgCamera_last, int num, int num_last);
 void show_message(int predict_result, CvRect* r, IplImage* &imgDrawn);
+void send_record(float gender,float eig[], int sizeofeig);

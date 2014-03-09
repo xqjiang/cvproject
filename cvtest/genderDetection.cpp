@@ -74,9 +74,9 @@ Ptr<FaceRecognizer> gender_detection(string fn_csv)
     // this part will add in the EigenFaceRecognizer in order to in reduce the dimension further
     // int height = images[0].rows;
     //PCA model
-    // Ptr<FaceRecognizer> model = createEigenFaceRecognizer();
+    Ptr<FaceRecognizer> eigenmodel = createEigenFaceRecognizer();
     //train the PCA model and without loss of information
-    // model->train(images, labels);
+    eigenmodel->train(images, labels);
     //save the results of the train
     // model->save("eigenface.yml");
     //take out the feature values from the eigenfaces and then rank them from largest to smallest

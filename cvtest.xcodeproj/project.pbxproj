@@ -10,6 +10,7 @@
 		3983E7E618CC9B6B00654C05 /* genderDetection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3983E7E418CC9B6B00654C05 /* genderDetection.cpp */; };
 		3983E7E918CC9B8300654C05 /* Capture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3983E7E718CC9B8300654C05 /* Capture.cpp */; };
 		3983E7EC18CC9B8D00654C05 /* Recognition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3983E7EA18CC9B8D00654C05 /* Recognition.cpp */; };
+		3983E7EE18CCD39C00654C05 /* libcurl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3983E7ED18CCD39C00654C05 /* libcurl.dylib */; };
 		5AC8DC121897A65500C31374 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5AC8DC111897A65500C31374 /* main.cpp */; };
 		5AC8DC141897A65500C31374 /* cvtest.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 5AC8DC131897A65500C31374 /* cvtest.1 */; };
 		5AC8DC1B1897A71600C31374 /* libopencv_core.2.4.8.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AC8DC1A1897A71600C31374 /* libopencv_core.2.4.8.dylib */; };
@@ -51,6 +52,7 @@
 		3983E7E818CC9B8300654C05 /* Capture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Capture.h; sourceTree = "<group>"; };
 		3983E7EA18CC9B8D00654C05 /* Recognition.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Recognition.cpp; sourceTree = "<group>"; };
 		3983E7EB18CC9B8D00654C05 /* Recognition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Recognition.h; sourceTree = "<group>"; };
+		3983E7ED18CCD39C00654C05 /* libcurl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcurl.dylib; path = usr/lib/libcurl.dylib; sourceTree = SDKROOT; };
 		5AC8DC0E1897A65500C31374 /* cvtest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = cvtest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5AC8DC111897A65500C31374 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		5AC8DC131897A65500C31374 /* cvtest.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = cvtest.1; sourceTree = "<group>"; };
@@ -78,6 +80,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3983E7EE18CCD39C00654C05 /* libcurl.dylib in Frameworks */,
 				5AC8DC2D1897A7FA00C31374 /* libopencv_contrib.2.4.8.dylib in Frameworks */,
 				5AC8DC2E1897A7FA00C31374 /* libopencv_features2d.2.4.8.dylib in Frameworks */,
 				5AC8DC2F1897A7FA00C31374 /* libopencv_flann.2.4.8.dylib in Frameworks */,
@@ -103,6 +106,7 @@
 		5AC8DC051897A65500C31374 = {
 			isa = PBXGroup;
 			children = (
+				3983E7ED18CCD39C00654C05 /* libcurl.dylib */,
 				5AC8DC1C1897A7FA00C31374 /* libopencv_calib3d.2.4.8.dylib */,
 				5AC8DC1D1897A7FA00C31374 /* libopencv_contrib.2.4.8.dylib */,
 				5AC8DC1E1897A7FA00C31374 /* libopencv_features2d.2.4.8.dylib */,

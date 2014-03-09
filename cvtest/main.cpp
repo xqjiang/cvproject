@@ -22,6 +22,7 @@
 #include <limits.h>
 #include <time.h>
 #include <ctype.h>
+#include "curl/curl.h"
 
 
 #include <Recognition.h>
