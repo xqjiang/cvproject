@@ -25,185 +25,155 @@
 
 
 #include <Recognition.h>
-#include <draw.h>
-#include <FaceCollection.h>
-#include <FaceRecord.h>
-#include <FaceCapture.h>
-#include <morph.h>
+#include <Capture.h>
+#include <genderDetection.h>
 
+using namespace std;
 
 // Create a string that contains the exact cascade name
 const char* cascade_name =
 "/opt/local/share/OpenCV/haarcascades/haarcascade_frontalface_alt.xml";
-/*    "haarcascade_profileface.xml";*/
-
-
 
 // Main function, defines the entry point for the program.
 int main( int argc, char** argv )
 {
+    Ptr<FaceRecognizer>  model = gender_detection("/Users/xueqianjiang/Desktop/male.txt");
+    
+    // memeory allocation
+    static CvMemStorage* storage = 0;
+    storage = cvCreateMemStorage(0);
+    static CvMemStorage* storage2 = 0;
+    storage2 = cvCreateMemStorage(0);
     
     // Create a new named window with title: result
-    cvNamedWindow( "result", 1 );
-    
-    CvCapture* capture =capture = cvCaptureFromCAM(-1); // capture from video device (Macbook iSight)
+    cvNamedWindow("Window"); // create a window to display in
+    CvCapture* capture = capture = cvCaptureFromCAM(-1); // capture from video device (Macbook iSight)
     cvSetCaptureProperty( capture, CV_CAP_PROP_FRAME_WIDTH, 1000 );// set window size to 640
     cvSetCaptureProperty( capture, CV_CAP_PROP_FRAME_HEIGHT, 600 ); // set window size to 480
     
-    // Create a sample image
-    IplImage *imgCamera;
-    IplImage *imgDrawn;
+    // Declare images
+    IplImage *imgCamera; // captured from camera
+    IplImage *imgCamera_last; // last campera image
+    IplImage *imgDrawn; // image with drawing (rect containing faces)
+    IplImage *imgFace; // face picture extracted from the camera
+    CvRect *r; // rects containing faces
+    CvSeq *faces = cvCreateSeq(0, sizeof(CvSeq), sizeof(CvRect), storage); ; // sequnece of faces in the camera image - CURRENT
+    CvSeq *faces_last = cvCreateSeq(0, sizeof(CvSeq), sizeof(CvRect), storage2); // sequnece of faces in the camera image - LAST FRAME
+    float scale = 1.0/5; // how far do we want to scale down the haar detect objects images for speed
     
-    IplImage *imgFace;
-    IplImage *imgEyes;
-    IplImage *img;
-    IplImage *newImg;
-    IplImage *lastimg;
+    // Create a new Haar classifier
+    static CvHaarClassifierCascade* cascade = 0;
+    cascade = (CvHaarClassifierCascade*)cvLoad( cascade_name, 0, 0, 0 );
     
-    CvSeq* faces;
-    CvSeq* lastfaces;
+    // file name where to save the file
+    std::stringstream filename;
     
-    //FaceCollection collection = FaceCollection("/Users/alexli/Documents/Academics 2014 Winter/cvtest/cvtest");
-    
+    int counter = 1;
+    int filecounter = 1;
     while(1) {
-        
         //*************************************************************************************/
         //Step 1: stream video. Video to images
         //*************************************************************************************/
-        
-        cvNamedWindow("Window"); // create a window to display in
-        CvCapture* capture = cvCaptureFromCAM(-1); // capture from video device (Macbook iSight)
         
         // capture frame from video and then turn it into one single image-imgCamera
         capture_frame(capture, imgCamera);
         
         // allocate an image to be used later
         imgDrawn = cvCreateImage(cvGetSize(imgCamera), imgCamera->depth, imgCamera->nChannels);
-        imgFace = cvCreateImage(cvSize(600, 600), imgCamera->depth, imgCamera->nChannels);
-        
-        // Create memory for calculations
-        static CvMemStorage* storage = 0;
-        
-        // Allocate the memory storage
-        storage = cvCreateMemStorage(0);
-        
-        // Clear the memory storage which was used before
-        cvClearMemStorage( storage );
-        
-        // Create a new Haar classifier
-        static CvHaarClassifierCascade* cascade = 0;
-        
-        // Load the HaarClassifierCascade
-        cascade = (CvHaarClassifierCascade*)cvLoad( cascade_name, 0, 0, 0 );
-        
-        CvRect *r;
-        CvSeq *faces;
-        vector<int> number;
-        
-        float scale = 1.0/10; // how far do we want to scale down the haar detect objects images for speed
-        
-        //************************Implementation**************************
-        // j is the iterator to keep track of the no of picture per person taken
-        int j = 0;
-        
-        int i;
-        while (j<15) {
-        capture_frame(capture, imgCamera);
-        
+        imgFace = cvCreateImage(cvSize(120, 165), imgCamera->depth, imgCamera->nChannels);
         cvCopy(imgCamera, imgDrawn);
         
-        find_faces(imgCamera, storage, cascade, faces, scale);
-        
-        // for each face found in the image
-        for( i = 0; i < (faces ? faces->total : 0); i++ ){
-            // get the rect from the sequence
-            r = (CvRect*)cvGetSeqElem( faces, i );
-            // resize the rectangle faces found
-            CvRect x = cvRect(r->x/scale, r->y/scale, r->width/scale, r->height/scale);
-            r = &x;
+        if (counter == 20) { // take action for every 10 frames
             
-            draw_face_rect(r, imgDrawn); // draw the rectange around the face on the imgDrawn
-            crop_and_scale_face(imgCamera, imgFace, r);
+            counter = 1;
+            //*************************************************************************************/
+            //Step 2: Detection
+            //*************************************************************************************/
+            find_faces(imgCamera, storage, cascade, faces, scale);
+            //printf("Last faces seq had %d faces detected. \n",faces_last->total);
             
+            //*************************************************************************************/
+            //Step 4: Draw every face in the picture
+            //*************************************************************************************/
             
-            // from here, we need to save a couple images so we can crop out the features we want.
-            // then we can do the filter2D stuff
+            // for each face found in the image
             
-            j++;
+            //************************this PART I PUT IT AFTER DETECTION SO THAT I COULD HAVE FACE AND MESSAGE DISPLAY AT THE SAME TIME**************************
             
-            char *name = new char[100];
-            sprintf(name,"/Users/xueqianjiang/Desktop/opencv/img%d.jpg",j);
-            
-            cvSaveImage(name, imgFace);
+            for(int i = 0; i < (faces ? faces->total : 0); i++ ){
+                // get the rect from the sequence
+                r = (CvRect*)cvGetSeqElem(faces, i);
+                
+                // draw the rectange around the face on the imgDrawn
+                draw_rect(imgDrawn, r, scale);
+            }
             
             cvShowImage("Window", imgDrawn);
+            
+            //************************END OF THE DRAWING PART************************
+            
+            // press escape to quit
+            if( cvWaitKey(33) == 27 ) break;
+            //*************************************************************************************/
+            //Step 3: Recognize the new faces
+            //*************************************************************************************/
+            //TO DO: Combined the following into a funciton: match_faces(faces_new, faces, faces_last, lastspotted, currentspotted, imgCamera);
+            
+            
+            for(int i = 0; i < (faces ? faces->total : 0); i++ ){
+                // get the rect from the sequence
+                r = (CvRect*)cvGetSeqElem(faces, i);
+                // draw a rectangle around the rect
+                // draw_rect(imgDrawn, r, scale);
+                if (faces_last->total == 0) {
+                    cout<<"a face appeared: "<<"there are total faces of "<<faces->total<<"\n";
+                    save_face(r, imgCamera, imgFace, scale, filecounter);
+                    filecounter++;
+                    // report_faces(filecounter, faces_new->total, model); // report new faces stored starting from filecounter
+                }
+                else {
+                    for(int k = 0; k < (faces_last ? faces_last->total : 0); k++ ){
+                        CvRect *r_last = (CvRect*)cvGetSeqElem(faces_last, k);
+                        if (!same_face(r, r_last, imgCamera, imgCamera_last, i, k)) {
+                            string file_name = save_face(r, imgCamera, imgFace, scale, filecounter);
+                            cout<< file_name<<endl;
+                            filecounter++;
+                            int predict_result = detect(model, file_name);
+                            // try to display the result on top of the video detection frame
+                            
+                            
+                            //  show_message(predict_result,r); CHANGE THIS
+                            
+                            
+                            //report_faces(filecounter, faces_new->total, model); // report new faces stored starting from filecounter
+                        }
+                    }
+                }
+            }
+            
+            //cvClearMemStorage(storage2);
+            while (faces_last->total >0) {
+                cvSeqPop(faces_last);}
+            
+            for(int i = 0; i < (faces ? faces->total : 0); i++ ){
+                // get the rect from the sequence
+                r = (CvRect*)cvGetSeqElem(faces, i);
+                cvSeqPush(faces_last, r);
+            }
+            //cout << "face_last:" << faces_last->total << "\n";}
+            cvClearMemStorage(storage);
         }
-        
-        char c = cvWaitKey(33); // press escape to quit
-        if( c == 27 ) break;
+        counter++;
+        imgCamera_last = imgCamera;
         
     }
     
-    
-    //*************************************************************************************/
-    //Step 2: detect faces
-    //*************************************************************************************/
-    
-    
-    // When there are faces in the image, collect the image
-    //   if (faces->total !=0) {
-    //*************************************************************************************/
-    //Step 3: classify faces and save them into groups
-    //*************************************************************************************/
-    //FaceCollection::update_collection(img, faces, collection);
-    
-    //*************************************************************************************/
-    //Step 4: process the "full and unprocessed folders"
-    //*************************************************************************************/
-    //vector<IplImage> processed_images;
-    //processed_images= FaceCollection::process_collection(collection);
-    
-    //*************************************************************************************/
-    //Step 5: extraction information from processed facial images
-    //*************************************************************************************/
-    // vector<FaceRecord> recs = record(processed_images);
-    
-    //*************************************************************************************/
-    //Step 6: upload the records
-    //*************************************************************************************/
-    // upload(recs);
-    
-    //      } else {
-    //FaceCollection::reset_collection(collection);
-    //       }
-    
-    // update
-    //   lastimg = img;
-    // lastfaces = faces;
-    
-    //*************************************************************************************/
-    //DEBUG and DISPLAY
-    //*************************************************************************************/
-    
-    // Show the image in the window named "result"
-    // box the faces in the image for display
-    // int scale = 1;
-    // img = detect_and_draw(img, faces, scale);
-    // cvShowImage( "result", img );
-    
-    // press escape to quit
-    //  if( cvWaitKey(33) == 27 ) break;
-    // }
-    
-    //cvReleaseCapture( &capture );
-    
-    // Release the image
-    // cvReleaseImage(&img);
-    
-    // Destroy the window previously created with filename: "result"
-    // cvDestroyWindow("result");
+    cvReleaseCapture( &capture );
+    cvReleaseImage(&imgCamera);
+    cvReleaseImage(&imgDrawn);
+    cvReleaseImage(&imgFace);
+    cvDestroyWindow("window");
     
     // return 0 to indicate successfull execution of the program
     return 0;
-}
 }
