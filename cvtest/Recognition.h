@@ -28,7 +28,7 @@ using namespace std;
 
 void find_faces( IplImage* img, CvMemStorage* storage, CvHaarClassifierCascade* cascade, CvSeq* faces, float scale);
 
-void report_faces(int start, int n, Ptr<FaceRecognizer> model);
+void report_faces(int start, int n, Ptr<FaceRecognizer> model,Ptr<FaceRecognizer> LBPH_model);
 bool same_face(CvRect* r, CvRect* r_last, IplImage* imgCamera, IplImage* imgCamera_last, int num, int num_last);
 void show_message(int predict_result, CvRect* r, IplImage* &imgDrawn);
-void send_record(float gender,float eig[], int sizeofeig);
+void send_record(float gender,float person_new, float eig[], int sizeofeig);

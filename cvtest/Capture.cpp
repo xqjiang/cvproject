@@ -76,4 +76,16 @@ string save_face(CvRect* f, IplImage* imgCamera,IplImage* imgFace, float scale, 
     return file_name;
 }
 
-
+int getFileCount(string File_Count)
+{
+    int count =0;
+    ifstream infile;
+    infile.open(File_Count);
+    string line;
+    while (getline(infile, line))
+    {
+        count++;
+    }
+    infile.close();
+    return count;
+}

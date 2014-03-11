@@ -33,7 +33,11 @@ using namespace cv;
 
 int detect(Ptr<FaceRecognizer> model, string filename);
 
+int detect_Id(Ptr<FaceRecognizer> model, string Image_filename);
+
 Ptr<FaceRecognizer> gender_detection(string filename);
 
 void read_csv(string filename, vector<Mat>& imagess, vector<int>& labelss);
+
+Ptr<FaceRecognizer> new_person_detection(string filename);
 

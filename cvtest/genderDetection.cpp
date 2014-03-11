@@ -74,9 +74,9 @@ Ptr<FaceRecognizer> gender_detection(string fn_csv)
     // this part will add in the EigenFaceRecognizer in order to in reduce the dimension further
     // int height = images[0].rows;
     //PCA model
-    Ptr<FaceRecognizer> eigenmodel = createEigenFaceRecognizer();
+    //Ptr<FaceRecognizer> model = createEigenFaceRecognizer();
     //train the PCA model and without loss of information
-    eigenmodel->train(images, labels);
+    //model->train(images, labels);
     //save the results of the train
     // model->save("eigenface.yml");
     //take out the feature values from the eigenfaces and then rank them from largest to smallest
@@ -109,11 +109,34 @@ Ptr<FaceRecognizer> gender_detection(string fn_csv)
 }
 
 
-int detect(Ptr<FaceRecognizer> model, string filename) {
-    Mat A = imread(filename, 0);
+int detect(Ptr<FaceRecognizer> model, string Image_filename) {
+    Mat A = imread(Image_filename, 0);
     int prediction = model->predict(A);
-    //string result_message = format("Predicted class = %d.", prediction);
-    cout << "You are a "<<prediction <<" haha"<<endl;
+    string result_message = format("Predicted class = %d.", prediction);
+    cout << result_message<<endl;
     return prediction;
 }
 
+int detect_Id(Ptr<FaceRecognizer> model, string Image_filename) {
+    Mat A = imread(Image_filename, 0);
+    int prediction = model->predict(A);
+    string result_message = format("Predicted class = %d.", prediction);
+    cout << result_message<<endl;
+    return prediction;
+}
+
+Ptr<FaceRecognizer> new_person_detection(string filename){
+    Ptr<FaceRecognizer> LBPH_model = createLBPHFaceRecognizer(1,1,2,2,123);
+    vector<Mat> images;
+    vector<int> labels;
+   
+    try {
+        read_csv(filename, images, labels);
+    } catch (Exception& e) {
+        cerr << "Error opening file \"" << filename << "\". Reason: " << e.msg << endl;
+        // nothing more we can do
+        exit(1);
+    }
+    LBPH_model -> train(images, labels);
+    return LBPH_model;
+}

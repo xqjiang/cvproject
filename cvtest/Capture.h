@@ -12,6 +12,9 @@
 #include <iostream>
 #include <opencv2/opencv.hpp>
 #include <string.h>
+#include <fstream>
+#include <sstream>
+
 
 using namespace std;
 
@@ -28,3 +31,5 @@ void draw_rect(IplImage* &img, CvRect* r, float scale);
 void capture_face(IplImage *imgCamera, IplImage* &imgFace, CvRect *r, float scale);
 
 string save_face(CvRect* f, IplImage* imgCamera, IplImage* imgFace,float scale, int picCounter);
+
+int getFileCount(string File_Count);

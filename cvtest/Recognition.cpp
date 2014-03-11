@@ -53,32 +53,38 @@ bool same_face(CvRect* r, CvRect* r_last, IplImage* imgCamera, IplImage* imgCame
     return diff<(r->width)/4;
 }
 
-void report_faces(int start, int n, Ptr<FaceRecognizer> model) {
+void report_faces(int start, int n, Ptr<FaceRecognizer> model, Ptr<FaceRecognizer> LBPH_model) {
     const char* folder_name ="/Users/xueqianjiang/Desktop/Images";
     std::stringstream filename;
     int gender;
+    int person_new;
     int sizeofeig=3;
     float eigenface[sizeofeig];
     float eig[sizeofeig];
     for (int i = start+1; i<=start+n; i++) {
         filename<< folder_name << "/img" << i << ".jpg";
-        //gender = detect(model, filename.str());
-        gender = 0; // replace with above
+        gender = detect(model, filename.str());
+        
+        // person_new returns: the Id of the person if the person is in the database, and -1 if the person is not in the database
+        
+        person_new = detect_Id(LBPH_model, filename.str());
+        //gender = 0; // replace with above
         //eigenface = eigenface(filename.str());
         for (int j=0; j<sizeofeig; j++) {
             eig[j]=eigenface[j];}
-        send_record(gender,eig, sizeofeig);
+        send_record(gender, person_new, eig, sizeofeig);
     }
     
     // query database on the eigenface of the images
     // save the face visit in the database
 }
 
-void send_record(float gender,float eig[], int sizeofeig) {
+void send_record(float gender,float person_new, float eig[], int sizeofeig) {
     CURL* curl;
     CURLcode res;
     ostringstream postmsg;
     postmsg <<"gender=" << gender;
+    postmsg << "new_person =" << person_new;
     for (int i=0; i<sizeofeig; i++) {
         postmsg << "&eig";
         postmsg << i << "=";
