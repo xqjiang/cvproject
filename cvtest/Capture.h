@@ -30,6 +30,6 @@ void draw_rect(IplImage* &img, CvRect* r, float scale);
 //crop the face image according to r, and save it to ImgFace after scaling
 void capture_face(IplImage *imgCamera, IplImage* &imgFace, CvRect *r, float scale);
 
-string save_face(CvRect* f, IplImage* imgCamera, IplImage* imgFace,float scale, int picCounter);
+void save_face(CvRect* f, IplImage* imgCamera, IplImage* imgFace,float scale, int picCounter);
 
 int getFileCount(string File_Count);

@@ -43,7 +43,7 @@ int main( int argc, char** argv )
     Ptr<FaceRecognizer>  model = gender_detection(file_name_gender_model);
     // all the persons that comes into the camera should save face into the file_name_persons_model, with ID
     
-    string file_name_persons_model = "Users/xueqianjiang/Desktop/males.txt";
+    string file_name_persons_model = "/Users/xueqianjiang/Images/Images.txt";
     
     Ptr<FaceRecognizer> LBPH_model = new_person_detection(file_name_gender_model);
     
@@ -81,8 +81,8 @@ int main( int argc, char** argv )
     std::stringstream filename;
     
     int counter = 1;
-    //int filecounter = file_Count;
-    int filecounter = 0;
+    int filecounter = file_Count;
+    //int filecounter = 0;
     while(1) {
         //*************************************************************************************/
         //Step 1: stream video. Video to images
@@ -113,15 +113,15 @@ int main( int argc, char** argv )
             
             //************************this PART I PUT IT AFTER DETECTION SO THAT I COULD HAVE FACE AND MESSAGE DISPLAY AT THE SAME TIME**************************
           
-            for(int i = 0; i < (faces ? faces->total : 0); i++ ){
+           // for(int i = 0; i < (faces ? faces->total : 0); i++ ){
                 // get the rect from the sequence
-                r = (CvRect*)cvGetSeqElem(faces, i);
+             //   r = (CvRect*)cvGetSeqElem(faces, i);
                 
                 // draw the rectange around the face on the imgDrawn
-                draw_rect(imgDrawn, r, scale);
-            }
+               // draw_rect(imgDrawn, r, scale);
+           // }
             
-            cvShowImage("Window", imgDrawn);
+         //   cvShowImage("Window", imgDrawn);
             
             //************************END OF THE DRAWING PART************************
             
@@ -137,9 +137,12 @@ int main( int argc, char** argv )
                 // get the rect from the sequence
                 r = (CvRect*)cvGetSeqElem(faces, i);
                 // draw a rectangle around the rect
-               // draw_rect(imgDrawn, r, scale);
-                
-                if (faces_last->total == 0) {
+                draw_rect(imgDrawn, r, scale);
+                show_message(1, r, imgDrawn);
+                cvShowImage("Window", imgDrawn);
+
+                if (faces_last->total == 0)
+                {
                     cout<<"a face appeared: "<<"there are total faces of "<<faces->total<<endl;
                     save_face(r, imgCamera, imgFace, scale, filecounter);
                     filecounter++;
@@ -149,7 +152,8 @@ int main( int argc, char** argv )
                     for(int k = 0; k < (faces_last ? faces_last->total : 0); k++ ){
                         CvRect *r_last = (CvRect*)cvGetSeqElem(faces_last, k);
                         if (!same_face(r, r_last, imgCamera, imgCamera_last, i, k)) {
-                            string file_name = save_face(r, imgCamera, imgFace, scale, filecounter);
+                            
+                            save_face(r, imgCamera, imgFace, scale, filecounter);
                             //cout<< file_name<<endl;
                             filecounter++;
                             //int predict_result = detect(model, file_name);

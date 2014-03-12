@@ -16,6 +16,7 @@
 #include <Capture.h>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include <fstream>
 #include "curl/curl.h"
 using namespace cv;
 using namespace std;

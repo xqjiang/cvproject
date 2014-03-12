@@ -120,7 +120,7 @@ int detect(Ptr<FaceRecognizer> model, string Image_filename) {
 int detect_Id(Ptr<FaceRecognizer> model, string Image_filename) {
     Mat A = imread(Image_filename, 0);
     int prediction = model->predict(A);
-    string result_message = format("Predicted class = %d.", prediction);
+    string result_message = format("Predicted class for id = %d.", prediction);
     cout << result_message<<endl;
     return prediction;
 }

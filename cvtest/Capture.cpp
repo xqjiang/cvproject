@@ -63,7 +63,9 @@ void capture_face(IplImage *imgCamera, IplImage* &imgFace, CvRect *r, float scal
     cvReleaseImage(&tmp);
 }
 
-string save_face(CvRect* f, IplImage* imgCamera,IplImage* imgFace, float scale, int picCounter) {
+// this saves one face
+
+void save_face(CvRect* f, IplImage* imgCamera,IplImage* imgFace, float scale, int picCounter) {
     const char* folder_name ="/Users/xueqianjiang/Desktop/Images";
     // capture the face image into imgFace for processing
     capture_face(imgCamera, imgFace, f, scale);
@@ -72,8 +74,8 @@ string save_face(CvRect* f, IplImage* imgCamera,IplImage* imgFace, float scale, 
     filename<< folder_name << "/img" << picCounter << ".jpg";
     char *name = (char *)filename.str().c_str();
     cvSaveImage(name, imgFace);
-    string file_name(name);
-    return file_name;
+    //string file_name(name);
+    //return file_name;
 }
 
 int getFileCount(string File_Count)

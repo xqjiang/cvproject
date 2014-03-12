@@ -53,31 +53,49 @@ bool same_face(CvRect* r, CvRect* r_last, IplImage* imgCamera, IplImage* imgCame
     return diff<(r->width)/4;
 }
 
+// report_faces takes in the current folder no and then do recognition in here and then send to the backend server
+
 void report_faces(int start, int n, Ptr<FaceRecognizer> model, Ptr<FaceRecognizer> LBPH_model) {
     const char* folder_name ="/Users/xueqianjiang/Desktop/Images";
+    const char* file_name = "/Users/xueqianjiang/Desktop/Images/Images.txt";
     std::stringstream filename;
     int gender;
     int person_new;
     int sizeofeig=3;
     float eigenface[sizeofeig];
     float eig[sizeofeig];
-    for (int i = start+1; i<=start+n; i++) {
+    ofstream outputFile;
+    outputFile.open(file_name, ios::app);
+    //outputFile.open(file_name);
+    
+       // for (int i = start; i<=start+n; i++) {
+   int i=start;
         filename<< folder_name << "/img" << i << ".jpg";
         gender = detect(model, filename.str());
         
         // person_new returns: the Id of the person if the person is in the database, and -1 if the person is not in the database
-        
+        person_new = 0;
         person_new = detect_Id(LBPH_model, filename.str());
         //gender = 0; // replace with above
         //eigenface = eigenface(filename.str());
+        
+        // try to write to file
+        filename<<";"<<gender<<'\n';
+        outputFile<< filename.str();
+        
         for (int j=0; j<sizeofeig; j++) {
-            eig[j]=eigenface[j];}
+            eig[j]=eigenface[j];
+   //     }
         send_record(gender, person_new, eig, sizeofeig);
     }
+    outputFile.close();
     
     // query database on the eigenface of the images
     // save the face visit in the database
 }
+
+
+// send_record should theoretically read in the gender, person_new information and send to the server. not to be used on its own
 
 void send_record(float gender,float person_new, float eig[], int sizeofeig) {
     CURL* curl;
@@ -110,26 +128,11 @@ void send_record(float gender,float person_new, float eig[], int sizeofeig) {
     }
 }
 
-//void report_faces(int start, int n, Ptr<FaceRecognizer> model) {
-  //  const char* folder_name ="/Users/xueqianjiang/Desktop/Images";
-    //std::stringstream filename;
-    //int result;
-    //for (int i = start+1; i<=start+n; i++) {
-      //  filename<< folder_name << "/img" << i << ".jpg";
-        //result = detect(model, filename.str());
-    //}
-    
-    // query database on the eigenface of the images
-    // save the face visit in the database
-//}
-
-// this will show the image on top of each rectangular face detected and then put into the prediction result
-
-
 void show_message(int predict_result, CvRect* r, IplImage* &imgDrawn)
 {
-    //char* actual_text = "Prediction = %d"+predict_result.str();
-    const char* actual_text = "testing";
+    //const char* actual_text = strcat("Welcome! Prediction = %d",predict_result());
+    
+    const char* actual_text = "Welcome! Your Gender is 1";
 	double hscale = 1.0;
 	double vscale = 0.8;
 	double shear = 0.2;
