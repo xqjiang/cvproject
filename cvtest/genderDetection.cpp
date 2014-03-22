@@ -120,16 +120,16 @@ int detect(Ptr<FaceRecognizer> model, string Image_filename) {
 int detect_Id(Ptr<FaceRecognizer> model, string Image_filename) {
     Mat A = imread(Image_filename, 0);
     int prediction = model->predict(A);
-    string result_message = format("Predicted class for id = %d.", prediction);
+    string result_message = format("Predicted Identity for id = %d.", prediction);
     cout << result_message<<endl;
     return prediction;
 }
 
 Ptr<FaceRecognizer> new_person_detection(string filename){
-    Ptr<FaceRecognizer> LBPH_model = createLBPHFaceRecognizer(1,1,2,2,123);
+    Ptr<FaceRecognizer> LBPH_model = createLBPHFaceRecognizer();
     vector<Mat> images;
     vector<int> labels;
-   
+    
     try {
         read_csv(filename, images, labels);
     } catch (Exception& e) {

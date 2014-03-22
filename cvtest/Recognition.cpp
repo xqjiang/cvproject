@@ -55,7 +55,7 @@ bool same_face(CvRect* r, CvRect* r_last, IplImage* imgCamera, IplImage* imgCame
 
 // report_faces takes in the current folder no and then do recognition in here and then send to the backend server
 
-void report_faces(int start, int n, Ptr<FaceRecognizer> model, Ptr<FaceRecognizer> LBPH_model) {
+int report_faces(int start, int n, Ptr<FaceRecognizer> model, Ptr<FaceRecognizer> LBPH_model) {
     const char* folder_name ="/Users/xueqianjiang/Desktop/Images";
     const char* file_name = "/Users/xueqianjiang/Desktop/Images/Images.txt";
     std::stringstream filename;
@@ -68,30 +68,31 @@ void report_faces(int start, int n, Ptr<FaceRecognizer> model, Ptr<FaceRecognize
     outputFile.open(file_name, ios::app);
     //outputFile.open(file_name);
     
-       // for (int i = start; i<=start+n; i++) {
-   int i=start;
-        filename<< folder_name << "/img" << i << ".jpg";
-        gender = detect(model, filename.str());
-        
-        // person_new returns: the Id of the person if the person is in the database, and -1 if the person is not in the database
-        person_new = 0;
-        person_new = detect_Id(LBPH_model, filename.str());
-        //gender = 0; // replace with above
-        //eigenface = eigenface(filename.str());
-        
-        // try to write to file
-        filename<<";"<<gender<<'\n';
-        outputFile<< filename.str();
-        
-        for (int j=0; j<sizeofeig; j++) {
-            eig[j]=eigenface[j];
-   //     }
+    // for (int i = start; i<=start+n; i++) {
+    int i=start;
+    filename<< folder_name << "/img" << i << ".jpg";
+    gender = detect(model, filename.str());
+    
+    // person_new returns: the Id of the person if the person is in the database, and -1 if the person is not in the database
+    person_new = 0;
+    person_new = detect_Id(LBPH_model, filename.str());
+    //gender = 0; // replace with above
+    //eigenface = eigenface(filename.str());
+    
+    // try to write to file
+    filename<<";"<<start<<'\n';
+    outputFile<< filename.str();
+    
+    for (int j=0; j<sizeofeig; j++) {
+        eig[j]=eigenface[j];
+        //     }
         send_record(gender, person_new, eig, sizeofeig);
     }
     outputFile.close();
     
     // query database on the eigenface of the images
     // save the face visit in the database
+    return gender;
 }
 
 
@@ -130,14 +131,21 @@ void send_record(float gender,float person_new, float eig[], int sizeofeig) {
 
 void show_message(int predict_result, CvRect* r, IplImage* &imgDrawn)
 {
-    //const char* actual_text = strcat("Welcome! Prediction = %d",predict_result());
-    
-    const char* actual_text = "Welcome! Your Gender is 1";
+    const char* actual_text;
 	double hscale = 1.0;
 	double vscale = 0.8;
 	double shear = 0.2;
 	int thickness = 2;
 	int line_type = 8;
+    
+    if (predict_result==1) {
+        actual_text="Welcome! Your Gender is Female";
+    }else{
+        if(predict_result==0)
+            actual_text="Welcome! Your Gender is Male";
+        else
+            actual_text = "";
+    }
     
 	CvFont font1;
 	cvInitFont(&font1,CV_FONT_HERSHEY_DUPLEX,hscale,vscale,shear,thickness,line_type);
