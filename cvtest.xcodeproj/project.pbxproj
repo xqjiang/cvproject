@@ -45,6 +45,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3910613318DDDB10003EE2C2 /* Images.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Images.txt; path = ../../Images/Images.txt; sourceTree = "<group>"; };
+		3910613418DDDB22003EE2C2 /* male.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = male.txt; path = ../../../male.txt; sourceTree = "<group>"; };
 		3915E3BB18BC7A2F00891744 /* gender */ = {isa = PBXFileReference; lastKnownFileType = folder; path = gender; sourceTree = "<group>"; };
 		3983E7E418CC9B6B00654C05 /* genderDetection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = genderDetection.cpp; sourceTree = "<group>"; };
 		3983E7E518CC9B6B00654C05 /* genderDetection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = genderDetection.h; sourceTree = "<group>"; };
@@ -142,11 +144,13 @@
 			children = (
 				3915E3BB18BC7A2F00891744 /* gender */,
 				5AC8DC111897A65500C31374 /* main.cpp */,
+				3910613418DDDB22003EE2C2 /* male.txt */,
 				3983E7E418CC9B6B00654C05 /* genderDetection.cpp */,
 				3983E7E518CC9B6B00654C05 /* genderDetection.h */,
 				3983E7E718CC9B8300654C05 /* Capture.cpp */,
 				3983E7E818CC9B8300654C05 /* Capture.h */,
 				3983E7EA18CC9B8D00654C05 /* Recognition.cpp */,
+				3910613318DDDB10003EE2C2 /* Images.txt */,
 				3983E7EB18CC9B8D00654C05 /* Recognition.h */,
 				5AC8DC131897A65500C31374 /* cvtest.1 */,
 			);
